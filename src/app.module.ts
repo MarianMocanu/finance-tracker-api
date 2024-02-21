@@ -8,7 +8,12 @@ import { ConfigModule } from '@nestjs/config';
 import { CategoryModule } from './category/category.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), TypeOrmModule.forRoot(dbConfig), EntryModule, CategoryModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRoot(dbConfig),
+    EntryModule,
+    CategoryModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

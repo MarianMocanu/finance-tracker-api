@@ -10,9 +10,6 @@ export class EntryService {
   constructor(@InjectRepository(Entry) private entryRepository: Repository<Entry>) {}
 
   async create(createEntryDto: CreateEntryDto): Promise<Entry> {
-
-    const category = await 
-
     return this.entryRepository.save(createEntryDto);
   }
 
