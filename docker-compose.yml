@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  postgresql-database:
+    image: postgres:latest
+    ports:
+      - '5432:5432'
+    container_name: cbs-postgresql
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: thisisasillypassword
+      POSTGRES_DB: finance-tracker
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
