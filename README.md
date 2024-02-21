@@ -82,7 +82,7 @@ To run migrations and set up your database schema, follow these steps:
 
 ## Database Scripts
 
-We have provided two scripts for interacting with the database:
+We have provided few scripts for interacting with the database:
 
 1. `dump-database.sh`: This script creates a data dump of the database.
 2. `import-database.sh`: This script creates a backup dump of the current data in the database and then imports the data from the data dump.
