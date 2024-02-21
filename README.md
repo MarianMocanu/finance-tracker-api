@@ -19,18 +19,66 @@
     <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
   <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# Finance-Tracker Nest.js
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Welcome to our Nest.js project! This project is built using [Nest.js](https://nestjs.com/), a progressive Node.js framework for building efficient, reliable, and scalable server-side applications. Below you will find instructions on setting up the project environment and running migrations.
 
-## Installation
+## Setup
 
-```bash
-$ npm install
-```
+To set up this project locally, please follow these steps:
+
+1. **Clone the repository to your local machine:**
+
+   ```bash
+   git clone <repository_url>
+   ```
+
+2. **Navigate to the project directory:**
+
+   ```bash
+   cd <project_directory>
+   ```
+
+3. **Create a .env file in the root directory of the project with the following content:**
+
+   ```env
+   DB_HOST=localhost
+   DB_PORT=5432
+   POSTGRES_USERNAME=<your_postgres_username>
+   POSTGRES_PASSWORD=<your_postgres_password>
+   POSTGRES_NAME=<your_database_name>
+   ```
+
+   Replace `<your_postgres_username>`, `<your_postgres_password>`, and `<your_database_name>` with your actual PostgreSQL credentials.
+
+4. **Start the PostgreSQL Docker container:**
+
+   Ensure you have Docker and Docker Compose installed on your machine. Then, run the following command to start the PostgreSQL Docker container:
+
+   ```bash
+   docker-compose -p cbs-postgresql up -d
+   ```
+
+   This command will start a Docker container with PostgreSQL using the settings defined in your `docker-compose.yml` file.
+
+## Running Migrations
+
+To run migrations and set up your database schema, follow these steps:
+
+1. **Install dependencies by running:**
+
+   ```bash
+   npm install
+   ```
+
+2. **Run the migrations:**
+
+   ```bash
+   npm run migration:run
+   ```
+
+   This command will execute all pending migrations and apply changes to your database schema.
 
 ## Running the app
 
@@ -57,17 +105,5 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
 
 Nest is [MIT licensed](LICENSE).
