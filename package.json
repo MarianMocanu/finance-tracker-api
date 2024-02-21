@@ -24,7 +24,8 @@
     "db:revert": "npm run typeorm -- migration:revert",
     "db:show": "npm run typeorm -- migration:show",
     "db:dump": "bash scripts/dump-database.sh",
-    "db:import": "bash scripts/import-database.sh"
+    "db:import": "bash scripts/import-database.sh",
+    "db:restore": "bash scripts/restore-database.sh"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
