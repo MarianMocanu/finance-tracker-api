@@ -6,9 +6,7 @@ services:
     ports:
       - '5432:5432'
     container_name: postgresDB
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: thisisasillypassword
-      POSTGRES_DB: finance-tracker
+    env_file:
+      - .env
     volumes:
       - ./pgdata:/var/lib/postgresql/data
