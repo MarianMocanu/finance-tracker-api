@@ -75,10 +75,27 @@ To run migrations and set up your database schema, follow these steps:
 2. **Run the migrations:**
 
    ```bash
-   npm run migration:run
+   npm run db:migrate
    ```
 
    This command will execute all pending migrations and apply changes to your database schema.
+
+## Database Scripts
+
+We have provided two scripts for interacting with the database:
+
+1. `dump.sh`: This script creates a dump of the database.
+2. `import.sh`: This script imports a database dump.
+
+Before running these scripts, make sure to set your database credentials in a `.env` file, after which you can run the scripts with:
+
+```bash
+   npm run db:dump
+```
+
+```bash
+   npm run db:import
+```
 
 ## Running the app
 
