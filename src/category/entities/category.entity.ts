@@ -1,5 +1,5 @@
 import { Entry } from 'src/entry/entities/entry.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Category {
@@ -9,6 +9,6 @@ export class Category {
   @Column()
   name: string;
 
-  @OneToMany(() => Entry, (entry) => entry.category)
+  @ManyToOne(() => Entry, (entry) => entry.categories)
   entry: Entry;
 }

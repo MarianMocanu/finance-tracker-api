@@ -1,5 +1,5 @@
 import { Category } from 'src/category/entities/category.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class Entry {
@@ -21,6 +21,6 @@ export class Entry {
   @Column()
   comment: string;
 
-  @ManyToOne(() => Category, (category) => category.id)
-  category: Category[];
+  @OneToMany(() => Category, (category) => category.entry)
+  categories: Category[];
 }
