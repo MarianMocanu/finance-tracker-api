@@ -5,7 +5,7 @@ services:
     image: postgres:latest
     ports:
       - '5432:5432'
-    container_name: cbs-postgresql
+    container_name: postgresDB
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: thisisasillypassword
