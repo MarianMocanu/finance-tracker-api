@@ -84,8 +84,9 @@ To run migrations and set up your database schema, follow these steps:
 
 We have provided two scripts for interacting with the database:
 
-1. `dump.sh`: This script creates a dump of the database.
-2. `import.sh`: This script imports a database dump.
+1. `dump-database.sh`: This script creates a data dump of the database.
+2. `import-database.sh`: This script creates a backup dump of the current data in the database and then imports the data from the data dump.
+3. `restore-database.sh`: This script imports the data dump from the backup created when importing in case the import script failed.
 
 Before running these scripts, make sure to set your database credentials in a `.env` file, after which you can run the scripts with:
 
@@ -95,6 +96,10 @@ npm run db:dump
 
 ```bash
 npm run db:import
+```
+
+```bash
+npm run db:restore
 ```
 
 ## Running the app
