@@ -90,11 +90,11 @@ We have provided two scripts for interacting with the database:
 Before running these scripts, make sure to set your database credentials in a `.env` file, after which you can run the scripts with:
 
 ```bash
-   npm run db:dump
+npm run db:dump
 ```
 
 ```bash
-   npm run db:import
+npm run db:import
 ```
 
 ## Running the app
