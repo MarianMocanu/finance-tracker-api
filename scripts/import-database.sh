@@ -2,7 +2,7 @@
 
 source .env
 
-CONTAINER_ID=$(docker ps -qf "name=cbs-postgresql")
+CONTAINER_ID=$(docker ps -qf "name=postgresDB")
 
 # Create a backup
 docker exec -t $CONTAINER_ID pg_dump --data-only -U $POSTGRES_USERNAME -d $POSTGRES_NAME > backup.sql
@@ -28,4 +28,4 @@ END
 EOF
 
 # Import the data
-cat db_dump.sql | docker exec -i $CONTAINER_ID psql -U $POSTGRES_USERNAME -d $POSTGRES_NAME
+cat db_data.sql | docker exec -i $CONTAINER_ID psql -U $POSTGRES_USERNAME -d $POSTGRES_NAME
