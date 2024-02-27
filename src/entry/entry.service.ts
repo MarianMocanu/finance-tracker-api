@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEntryDto } from './dto/create-entry.dto';
 import { UpdateEntryDto } from './dto/update-entry.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -17,15 +17,27 @@ export class EntryService {
     return this.entryRepository.find();
   }
 
-  findOne(id: number) {
-    return this.entryRepository.findOneBy({ id });
+  async findOne(id: number) {
+    const foundEntry = await this.entryRepository.findOneBy({ id });
+    if (!foundEntry) {
+      throw new NotFoundException('Entry not found');
+    }
+    return foundEntry;
   }
 
-  update(id: number, updateEntryDto: UpdateEntryDto) {
+  async update(id: number, updateEntryDto: UpdateEntryDto) {
+    const foundEntry = await this.entryRepository.findOneBy({ id });
+    if (!foundEntry) {
+      throw new NotFoundException('Entry not found');
+    }
     return this.entryRepository.update(id, updateEntryDto);
   }
 
-  remove(id: number) {
+  async remove(id: number) {
+    const foundEntry = await this.entryRepository.findOneBy({ id });
+    if (!foundEntry) {
+      throw new NotFoundException('Entry not found');
+    }
     return this.entryRepository.delete(id);
   }
 }

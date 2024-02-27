@@ -1,5 +1,11 @@
-import { IsArray, IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
-import { Category } from 'src/category/entities/category.entity';
+import {
+  IsDateString,
+  IsDefined,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateEntryDto {
   constructor(amount: number, date: Date, currency: string, name: string, comment: string) {
@@ -11,21 +17,26 @@ export class CreateEntryDto {
   }
 
   @IsNumber()
+  @IsDefined()
   @IsNotEmpty()
   amount: number;
 
-  @IsNotEmpty()
+  @IsDefined()
   @IsDateString()
+  @IsNotEmpty()
   date: Date;
 
+  @IsDefined()
   @IsString()
   @IsNotEmpty()
   currency: string;
 
+  @IsDefined()
   @IsString()
   @IsNotEmpty()
   name: string;
 
+  @IsDefined()
   @IsString()
   @IsOptional()
   comment: string;
