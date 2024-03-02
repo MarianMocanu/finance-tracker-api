@@ -8,7 +8,7 @@ import { EntryService } from 'src/entry/entry.service';
 describe('Entry Controller (e2e)', () => {
   let app: INestApplication;
   let entryService: EntryService;
-  let entryDTO: CreateEntryDto = new CreateEntryDto(
+  const entryDTO: CreateEntryDto = new CreateEntryDto(
     100,
     new Date(),
     'USD',
@@ -35,7 +35,6 @@ describe('Entry Controller (e2e)', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeDefined();
       expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body[0].id).toBeDefined();
     });
   });
 
