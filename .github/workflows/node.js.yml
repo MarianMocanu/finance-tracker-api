@@ -19,11 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-<<<<<<< Updated upstream
-      - run: npm ci
-=======
-      - run: docker-compose --env-file ./.test.env -p cbs-postgresql up -d
+      - run: docker-compose --env-file .test.env -p cbs-postgresql up -d
       - run: npm install
->>>>>>> Stashed changes
       - run: npm run build --if-present
       - run: npm run test:e2e
