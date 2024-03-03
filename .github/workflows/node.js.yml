@@ -47,6 +47,6 @@ jobs:
           DB_HOST: postgres
           DB_PORT: 5432
           POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testpassword
+          POSTGRES_PASSWORD: 'testpassword'
           POSTGRES_DB: testdb
           NODE_ENV: test
