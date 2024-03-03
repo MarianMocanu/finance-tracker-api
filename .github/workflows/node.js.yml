@@ -12,8 +12,6 @@ jobs:
       postgres:
         image: postgres:latest
         env:
-          DB_HOST: localhost
-          DB_PORT: 5432
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: testdb
@@ -45,7 +43,7 @@ jobs:
       - name: Change PostgreSQL password
         run: |
           sudo apt-get install -y postgresql-client
-          PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost -U testdb -c "ALTER USER $POSTGRES_USER WITH PASSWORD '$NEW_POSTGRES_PASSWORD';"
+          PGPASSWORD=$POSTGRES_PASSWORD psql -h localhost -U testuser -c "ALTER USER $POSTGRES_USER WITH PASSWORD '$NEW_POSTGRES_PASSWORD';"
         env:
           POSTGRES_PASSWORD: testpassword
           POSTGRES_USER: testuser
@@ -57,8 +55,6 @@ jobs:
       - name: Run e2e tests
         run: npm run test:e2e
         env:
-          DB_HOST: localhost
-          DB_PORT: 5432
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testsillypassword
           POSTGRES_DB: testdb
