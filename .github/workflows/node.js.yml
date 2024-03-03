@@ -12,6 +12,8 @@ jobs:
       postgres:
         image: postgres:latest
         env:
+          DB_HOST: localhost
+          DB_PORT: 5432
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: testdb
@@ -44,7 +46,7 @@ jobs:
         run: npm run db:migrate
       - run: npm run test:e2e
         env:
-          DB_HOST: postgres
+          DB_HOST: localhost
           DB_PORT: 5432
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: 'testpassword'
