@@ -8,19 +8,40 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres is ready
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
+      - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-      - run: docker-compose --env-file .test.env -p cbs-postgresql up -d
-      - run: npm install
-      - run: npm run db:migrate
-      - run: npm run build --if-present
+          node-version: 16
+      - name: Install dependencies  
+        run: npm install
+
+      - name: Wait for Postgres to be ready
+        run: | 
+          pg_isready -h localhost -p 5432 -U testuser; 
+          do echo "Waiting for postgres..." 
+          sleep 2
+        done
+
+      - name: Run migrations to update db
+        run: npm run db:migrate
       - run: npm run test:e2e
+        env: 
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/testdb
