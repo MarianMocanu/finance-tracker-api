@@ -45,7 +45,7 @@ jobs:
       - name: Change PostgreSQL password
         run: |
           sudo apt-get install -y postgresql-client
-          psql -h localhost -U postgres -c "ALTER USER $POSTGRES_USER WITH PASSWORD '$NEW_POSTGRES_PASSWORD';"
+          psql -h localhost -U testuser -c "ALTER USER $POSTGRES_USER WITH PASSWORD '$NEW_POSTGRES_PASSWORD';"
         env:
           OLD_POSTGRES_PASSWORD: testpassword
           POSTGRES_USER: testuser
