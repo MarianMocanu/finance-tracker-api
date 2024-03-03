@@ -45,9 +45,9 @@ To set up this project locally, please follow these steps:
    ```env
    DB_HOST=localhost
    DB_PORT=5432
-   POSTGRES_USERNAME=<your_postgres_username>
+   POSTGRES_USER=<your_postgres_username>
    POSTGRES_PASSWORD=<your_postgres_password>
-   POSTGRES_NAME=<your_database_name>
+   POSTGRES_DB=<your_database_name>
    ```
 
    Replace `<your_postgres_username>`, `<your_postgres_password>`, and `<your_database_name>` with your actual PostgreSQL credentials.
