@@ -30,22 +30,26 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
-      - name: Install dependencies  
+      - name: Install dependencies
         run: npm install
 
       - name: Wait for Postgres to be ready
-        run: | 
-          pg_isready -h localhost -p 5432 -U testuser; 
-          do echo "Waiting for postgres..." 
-          sleep 2
-        done
+        run: |
+          until pg_isready -h localhost -p 5432 -U testuser -d testdb;
+          do echo "Waiting for postgres..."
+            sleep 2
+          done
 
       - name: Run migrations to update db
         run: npm run db:migrate
-      - run: npm run test:e2e
-        env: 
-          DB_HOST: postgres
-          DB_PORT: 5432
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+
+      - name: Run e2e tests
+        run: npm run test:e2e
+        env:
           POSTGRES_USER: testuser
           POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: testdb
