@@ -37,14 +37,23 @@ jobs:
 
       - name: Wait for Postgres to be ready
         run: |
-          until pg_isready -h localhost -p 5432 -U testuser;
+          until pg_isready -h localhost -p 5432 -U postgres;
           do echo "Waiting for postgres..."
             sleep 2
           done
 
+      - name: Change PostgreSQL password
+        run: |
+          sudo apt-get install -y postgresql-client
+          psql -h localhost -U postgres -c "ALTER USER $POSTGRES_USER WITH PASSWORD '$NEW_POSTGRES_PASSWORD';"
+        env:
+          NEW_POSTGRES_PASSWORD: testpassword
+
       - name: Run migrations to update db
         run: npm run db:migrate
-      - run: npm run test:e2e
+
+      - name: Run e2e tests
+        run: npm run test:e2e
         env:
           DB_HOST: localhost
           DB_PORT: 5432
