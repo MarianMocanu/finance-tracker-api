@@ -63,6 +63,6 @@ jobs:
         run: npm run test:e2e
         env:
           POSTGRES_USER: testuser
-          POSTGRES_PASSWORD: testsillypassword
+          POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: testdb
           NODE_ENV: test
