@@ -5,7 +5,7 @@ import { AppModule } from 'src/app.module';
 import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
 import { CategoryService } from 'src/category/category.service';
 
-describe('category Controller (e2e)', () => {
+describe('Category Controller (e2e)', () => {
   let app: INestApplication;
   let categoryService: CategoryService;
   const categoryDTO = new CreateCategoryDto('Subscriptions');

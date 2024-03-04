@@ -5,7 +5,7 @@ import { AppModule } from 'src/app.module';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
-describe('Entry Controller (e2e)', () => {
+describe('User Controller (e2e)', () => {
   let app: INestApplication;
   let userService: UserService;
   const userDTO = new CreateUserDto('John', 'mail@john.com', 'qwerty');
