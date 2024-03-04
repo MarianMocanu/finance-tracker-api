@@ -67,7 +67,7 @@ To set up this project locally, please follow these steps:
    docker-compose -p cbs-postgresql up -d
    ```
 
-This command will start a Docker container with PostgreSQL using the settings defined in your `docker-compose.yml` file.
+   This command will start a Docker container with PostgreSQL using the settings defined in your `docker-compose.yml` file.
 
 ````
 
