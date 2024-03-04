@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+  HttpCode,
+} from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
@@ -19,16 +29,26 @@ export class CategoryController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
+    if (isNaN(+id)) {
+      throw new BadRequestException('Category id is not a number');
+    }
     return this.categoryService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
+    if (isNaN(+id)) {
+      throw new BadRequestException('Category id is not a number');
+    }
     return this.categoryService.update(+id, updateCategoryDto);
   }
 
   @Delete(':id')
+  @HttpCode(204)
   remove(@Param('id') id: string) {
+    if (isNaN(+id)) {
+      throw new BadRequestException('Category id is not a number');
+    }
     return this.categoryService.remove(+id);
   }
 }
