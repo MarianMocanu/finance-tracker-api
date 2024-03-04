@@ -14,6 +14,7 @@ describe('Entry Controller (e2e)', () => {
     'USD',
     'Salary',
     'First salary of the year',
+    1,
   );
 
   beforeAll(async () => {
@@ -35,6 +36,33 @@ describe('Entry Controller (e2e)', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeDefined();
       expect(Array.isArray(response.body)).toBe(true);
+    });
+  });
+
+  describe('/entry/category/:id (GET)', () => {
+    it('should return 400 status code if category id is not a number', async () => {
+      const response = await request(app.getHttpServer()).get('/entry/category/a123');
+      expect(response.statusCode).toBe(400);
+      expect(response.body.message).toBe('Category id is not a number');
+    });
+
+    it('should return 404 if categoryId not found', async () => {
+      const response = await request(app.getHttpServer()).get('/entry/category/999999');
+      expect(response.statusCode).toBe(404);
+      expect(response.body.message).toBe('Category not found');
+    });
+
+    it('should return 200 and an array of entries', async () => {
+      //arrange
+      const newEntry = await entryService.create(entryDTO);
+      //act
+      const response = await request(app.getHttpServer()).get('/entry/category/1');
+      //assert
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBeDefined();
+      expect(Array.isArray(response.body)).toBe(true);
+      // delete the entry at the end of the test
+      await entryService.remove(newEntry.id);
     });
   });
 
@@ -113,7 +141,6 @@ describe('Entry Controller (e2e)', () => {
       const response = await request(app.getHttpServer())
         .patch(`/entry/${updatedEntry.id}`)
         .send(updatedEntry);
-      console.log(response.body);
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeDefined();
       expect(response.body.affected).toBe(1);
