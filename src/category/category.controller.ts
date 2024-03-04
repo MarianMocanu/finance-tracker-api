@@ -29,26 +29,26 @@ export class CategoryController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    if (isNaN(+id)) {
-      throw new BadRequestException('Category id is not a number');
-    }
+    this.validateCategoryId(id);
     return this.categoryService.findOne(+id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCategoryDto: UpdateCategoryDto) {
-    if (isNaN(+id)) {
-      throw new BadRequestException('Category id is not a number');
-    }
+    this.validateCategoryId(id);
     return this.categoryService.update(+id, updateCategoryDto);
   }
 
   @Delete(':id')
   @HttpCode(204)
   remove(@Param('id') id: string) {
+    this.validateCategoryId(id);
+    return this.categoryService.remove(+id);
+  }
+
+  validateCategoryId(id: string) {
     if (isNaN(+id)) {
       throw new BadRequestException('Category id is not a number');
     }
-    return this.categoryService.remove(+id);
   }
 }
