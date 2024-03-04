@@ -9,7 +9,7 @@ export class Category {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   color: string;
 
   @OneToMany(() => Entry, (entry) => entry.category)

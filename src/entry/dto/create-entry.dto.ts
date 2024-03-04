@@ -14,7 +14,7 @@ export class CreateEntryDto {
     currency: string,
     name: string,
     comment: string,
-    categoryId: number,
+    categoryId?: number,
   ) {
     this.amount = amount;
     this.date = date;
