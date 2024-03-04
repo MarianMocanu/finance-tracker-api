@@ -43,6 +43,7 @@ To set up this project locally, please follow these steps:
 3. **Create a .env file in the root directory of the project with the following content:**
 
    ```env
+   JWT_SECRET=<your-secret>
    DB_HOST=localhost
    DB_PORT=5432
    POSTGRES_USER=<your_postgres_username>
@@ -50,7 +51,13 @@ To set up this project locally, please follow these steps:
    POSTGRES_DB=<your_database_name>
    ```
 
-   Replace `<your_postgres_username>`, `<your_postgres_password>`, and `<your_database_name>` with your actual PostgreSQL credentials.
+   Replace `<your_postgres_username>`, `<your_postgres_password>`, `<your_database_name>` with your actual PostgreSQL credentials and `<JWT_SECRET>` with a secure secret.
+
+   You can generate a secret by running the following command in your terminal:
+
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+   ```
 
 4. **Start the PostgreSQL Docker container:**
 
@@ -60,7 +67,9 @@ To set up this project locally, please follow these steps:
    docker-compose -p cbs-postgresql up -d
    ```
 
-   This command will start a Docker container with PostgreSQL using the settings defined in your `docker-compose.yml` file.
+````
+
+This command will start a Docker container with PostgreSQL using the settings defined in your `docker-compose.yml` file.
 
 ## Running Migrations
 
@@ -129,3 +138,4 @@ $ npm run test:cov
 ```
 
 Nest is [MIT licensed](LICENSE).
+````
