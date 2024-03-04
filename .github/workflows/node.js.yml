@@ -54,3 +54,4 @@ jobs:
           POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: testdb
           NODE_ENV: test
+          JWT_SECRET: thisisasillysecret
