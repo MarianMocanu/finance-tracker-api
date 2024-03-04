@@ -69,8 +69,6 @@ To set up this project locally, please follow these steps:
 
    This command will start a Docker container with PostgreSQL using the settings defined in your `docker-compose.yml` file.
 
-````
-
 ## Running Migrations
 
 To run migrations and set up your database schema, follow these steps:
@@ -138,4 +136,7 @@ $ npm run test:cov
 ```
 
 Nest is [MIT licensed](LICENSE).
-````
+
+```
+
+```
