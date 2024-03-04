@@ -51,7 +51,7 @@ To set up this project locally, please follow these steps:
    POSTGRES_DB=<your_database_name>
    ```
 
-   Replace `<your_postgres_username>`, `<your_postgres_password>`, `<your_database_name>` with your actual PostgreSQL credentials and `<JWT_SECRET>` with a secure secret.
+   Replace `<your_postgres_username>`, `<your_postgres_password>`, `<your_database_name>` with your actual PostgreSQL credentials and `<your-secret>` with a secure secret.
 
    You can generate a secret by running the following command in your terminal:
 
