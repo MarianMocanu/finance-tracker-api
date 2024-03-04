@@ -4,10 +4,14 @@ import { UpdateEntryDto } from './dto/update-entry.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Entry } from './entities/entry.entity';
 import { Repository } from 'typeorm';
+import { Category } from 'src/category/entities/category.entity';
 
 @Injectable()
 export class EntryService {
-  constructor(@InjectRepository(Entry) private entryRepository: Repository<Entry>) {}
+  constructor(
+    @InjectRepository(Entry) private entryRepository: Repository<Entry>,
+    @InjectRepository(Category) private categoryRepository: Repository<Category>,
+  ) {}
 
   async create(createEntryDto: CreateEntryDto): Promise<Entry> {
     return this.entryRepository.save(createEntryDto);
@@ -15,6 +19,14 @@ export class EntryService {
 
   findAll() {
     return this.entryRepository.find();
+  }
+
+  async findByCategory(id: number) {
+    const foundCategory = await this.categoryRepository.findOneBy({ id });
+    if (!foundCategory) {
+      throw new NotFoundException('Category not found');
+    }
+    return this.entryRepository.find({ where: { categoryId: id } });
   }
 
   async findOne(id: number) {

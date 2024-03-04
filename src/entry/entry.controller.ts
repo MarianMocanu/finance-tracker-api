@@ -27,6 +27,14 @@ export class EntryController {
     return this.entryService.findAll();
   }
 
+  @Get('category/:id')
+  findByCategory(@Param('id') id: string) {
+    if (isNaN(+id)) {
+      throw new BadRequestException('Category id is not a number');
+    }
+    return this.entryService.findByCategory(+id);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     if (isNaN(+id)) {
