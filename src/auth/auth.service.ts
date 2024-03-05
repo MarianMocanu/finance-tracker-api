@@ -13,12 +13,13 @@ export class AuthService {
     return this.userService.create(signupDTO);
   }
 
-  async login({ email, password }: LoginDto): Promise<{ token: string }> {
+  async login({ email, password }: LoginDto): Promise<{ user: User; token: string }> {
     const foundUser = await this.userService.findOneByEmail(email);
     if (!foundUser || !foundUser.comparePassword(password)) {
       throw new UnauthorizedException('Invalid credentials');
     }
     return {
+      user: foundUser,
       token: jwt.sign({ id: foundUser.id, email: foundUser.email }, process.env.JWT_SECRET),
     };
   }

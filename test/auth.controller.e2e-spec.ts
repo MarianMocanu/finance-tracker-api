@@ -57,7 +57,7 @@ describe('Auth Controller (e2e)', () => {
       await userService.remove(newUser.id);
     });
 
-    it('should return 200 and a token after login', async () => {
+    it('should return 200 status code,a token and a user after login', async () => {
       const newUser = await userService.create(createUserDto);
       const loginDto = new LoginDto(createUserDto.email, createUserDto.password);
 
@@ -66,6 +66,8 @@ describe('Auth Controller (e2e)', () => {
       expect(response.statusCode).toBe(200);
       expect(response.body.token).toBeDefined();
       expect(response.body.token.split('.').length).toBe(3);
+      expect(response.body.user).toBeDefined();
+      expect(response.body.user.name).toBe(createUserDto.name);
 
       await userService.remove(newUser.id);
     });
