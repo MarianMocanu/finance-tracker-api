@@ -14,7 +14,7 @@ describe('Entry Controller (e2e)', () => {
   let categoryService: CategoryService;
   const entryDTO: CreateEntryDto = new CreateEntryDto(
     100,
-    new Date(),
+    new Date().toISOString(),
     'USD',
     'Salary',
     'First salary of the year',
