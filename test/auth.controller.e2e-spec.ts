@@ -5,10 +5,12 @@ import { AppModule } from 'src/app.module';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { LoginDto } from 'src/auth/dto/login.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 describe('Auth Controller (e2e)', () => {
   let app: INestApplication;
   let userService: UserService;
+  let authService: AuthService;
   const createUserDto = new CreateUserDto('John', 'mail@john.com', 'qwerty');
 
   beforeAll(async () => {
@@ -17,6 +19,7 @@ describe('Auth Controller (e2e)', () => {
     }).compile();
 
     userService = moduleFixture.get<UserService>(UserService);
+    authService = moduleFixture.get<AuthService>(AuthService);
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
@@ -68,6 +71,36 @@ describe('Auth Controller (e2e)', () => {
       expect(response.body.token.split('.').length).toBe(3);
       expect(response.body.user).toBeDefined();
       expect(response.body.user.name).toBe(createUserDto.name);
+
+      await userService.remove(newUser.id);
+    });
+  });
+
+  describe('/auth/verify (GET)', () => {
+    it('should return 401 status code if invalid token', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/auth/verify')
+        .set('Authorization', 'invalidToken');
+
+      expect(response.statusCode).toBe(401);
+    });
+
+    it('should return 200 status code, a user and a new token after verification', async () => {
+      const newUser = await userService.create(createUserDto);
+      const loginResponse = await authService.login({
+        email: createUserDto.email,
+        password: createUserDto.password,
+      });
+
+      const response = await request(app.getHttpServer())
+        .get('/auth/verify')
+        .set('Authorization', loginResponse.token);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.body.user).toBeDefined();
+      expect(response.body.user.name).toBe(createUserDto.name);
+      expect(response.body.token).toBeDefined();
+      expect(response.body.token.split('.').length).toBe(3);
 
       await userService.remove(newUser.id);
     });
