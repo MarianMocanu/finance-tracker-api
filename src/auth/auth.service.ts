@@ -13,13 +13,19 @@ export class AuthService {
     return this.userService.create(signupDTO);
   }
 
-  async login({ email, password }: LoginDto): Promise<{ token: string }> {
+  async login({ email, password }: LoginDto): Promise<{ user: User; token: string }> {
     const foundUser = await this.userService.findOneByEmail(email);
     if (!foundUser || !foundUser.comparePassword(password)) {
       throw new UnauthorizedException('Invalid credentials');
     }
+    const payload = { email: foundUser.email, id: foundUser.id, name: foundUser.name };
     return {
-      token: jwt.sign({ id: foundUser.id, email: foundUser.email }, process.env.JWT_SECRET),
+      user: foundUser,
+      token: jwt.sign(payload, process.env.JWT_SECRET),
     };
+  }
+
+  refreshToken(user: User): string {
+    return jwt.sign(user, process.env.JWT_SECRET);
   }
 }
