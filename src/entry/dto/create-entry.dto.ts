@@ -10,7 +10,7 @@ import {
 export class CreateEntryDto {
   constructor(
     amount: number,
-    date: Date,
+    date: string,
     currency: string,
     name: string,
     comment: string,
@@ -32,7 +32,7 @@ export class CreateEntryDto {
   @IsDefined()
   @IsDateString()
   @IsNotEmpty()
-  date: Date;
+  date: string;
 
   @IsDefined()
   @IsString()

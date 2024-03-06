@@ -10,7 +10,7 @@ export class Entry {
   amount: number;
 
   @Column()
-  date: Date;
+  date: string;
 
   @Column()
   currency: string;
