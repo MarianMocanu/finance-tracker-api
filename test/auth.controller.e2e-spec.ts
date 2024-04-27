@@ -11,7 +11,6 @@ describe('Auth Controller (e2e)', () => {
   let app: INestApplication;
   let userService: UserService;
   let authService: AuthService;
-  const createUserDto = new CreateUserDto('John', 'mail@john.com', 'qwerty');
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -28,6 +27,7 @@ describe('Auth Controller (e2e)', () => {
 
   describe('/auth/signup (POST)', () => {
     it('should return 400 status code if invalid data', async () => {
+      const createUserDto = new CreateUserDto('John', 'mail@john.com', 'qwerty');
       const invalidUser = { ...createUserDto, password: 200 };
 
       const response = await request(app.getHttpServer()).post('/auth/signup').send(invalidUser);
@@ -36,6 +36,8 @@ describe('Auth Controller (e2e)', () => {
     });
 
     it('should return 201 and the new user after creation', async () => {
+      const createUserDto = new CreateUserDto('John', 'mail@john1.com', 'qwerty');
+
       const response = await request(app.getHttpServer()).post('/auth/signup').send(createUserDto);
 
       expect(response.statusCode).toBe(201);
@@ -49,6 +51,8 @@ describe('Auth Controller (e2e)', () => {
 
   describe('/auth/login (POST)', () => {
     it('should return 401 status code if invalid data', async () => {
+      const createUserDto = new CreateUserDto('John', 'mail@john2.com', 'qwerty');
+
       const newUser = await userService.create(createUserDto);
       const invalidLoginDto = new LoginDto('mail@john.com', 'invalidPassword');
 
@@ -61,6 +65,8 @@ describe('Auth Controller (e2e)', () => {
     });
 
     it('should return 200 status code,a token and a user after login', async () => {
+      const createUserDto = new CreateUserDto('John', 'mail@john3.com', 'qwerty');
+
       const newUser = await userService.create(createUserDto);
       const loginDto = new LoginDto(createUserDto.email, createUserDto.password);
 
@@ -86,6 +92,8 @@ describe('Auth Controller (e2e)', () => {
     });
 
     it('should return 200 status code, a user and a new token after verification', async () => {
+      const createUserDto = new CreateUserDto('John', 'mail@john4.com', 'qwerty');
+
       const newUser = await userService.create(createUserDto);
       const loginResponse = await authService.login({
         email: createUserDto.email,
@@ -116,6 +124,7 @@ describe('Auth Controller (e2e)', () => {
     });
 
     it('should return 200 status code', async () => {
+      const createUserDto = new CreateUserDto('John', 'mail@john5.com', 'qwerty');
       const newUser = await userService.create(createUserDto);
       const loginResponse = await authService.login({
         email: createUserDto.email,
