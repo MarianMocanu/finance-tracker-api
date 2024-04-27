@@ -106,6 +106,33 @@ describe('Auth Controller (e2e)', () => {
     });
   });
 
+  describe('/auth/upgrade (GET)', () => {
+    it('should return 401 status code if invalid token (user not logged in)', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/auth/upgrade')
+        .set('Authorization', 'invalidToken');
+
+      expect(response.statusCode).toBe(401);
+    });
+
+    it('should return 200 status code', async () => {
+      const newUser = await userService.create(createUserDto);
+      const loginResponse = await authService.login({
+        email: createUserDto.email,
+        password: createUserDto.password,
+      });
+
+      const response = await request(app.getHttpServer())
+        .get('/auth/upgrade')
+        .set('Authorization', loginResponse.token);
+      expect(response.statusCode).toBe(200);
+      expect(response.body).toBeDefined();
+      expect(response.body.affected).toBe(1);
+
+      await userService.remove(newUser.id);
+    });
+  });
+
   afterAll(async () => {
     await app.close();
   });

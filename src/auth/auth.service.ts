@@ -3,7 +3,8 @@ import { UserService } from 'src/user/user.service';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import * as jwt from 'jsonwebtoken';
-import { User } from 'src/user/entities/user.entity';
+import { Role, User } from 'src/user/entities/user.entity';
+import { UpdateResult } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,12 @@ export class AuthService {
     if (!foundUser || !foundUser.comparePassword(password)) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const payload = { email: foundUser.email, id: foundUser.id, name: foundUser.name };
+    const payload = {
+      email: foundUser.email,
+      id: foundUser.id,
+      name: foundUser.name,
+      role: foundUser.role,
+    };
     return {
       user: foundUser,
       token: jwt.sign(payload, process.env.JWT_SECRET),
@@ -27,5 +33,9 @@ export class AuthService {
 
   refreshToken(user: User): string {
     return jwt.sign(user, process.env.JWT_SECRET);
+  }
+
+  async upgradeToPremium(user: User): Promise<UpdateResult> {
+    return await this.userService.update(user.id, { role: Role.PREMIUM });
   }
 }

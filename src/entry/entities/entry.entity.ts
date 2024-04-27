@@ -9,7 +9,7 @@ export class Entry {
   @Column()
   amount: number;
 
-  @Column()
+  @Column({ nullable: true })
   date: string;
 
   @Column()
