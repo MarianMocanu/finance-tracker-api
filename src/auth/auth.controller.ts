@@ -20,6 +20,7 @@ export class AuthController {
     return this.authService.login(body);
   }
 
+  @UseGuards(AuthGuard)
   @Get('verify')
   @HttpCode(200)
   validateToken(@Req() request: RequestWithUser) {
