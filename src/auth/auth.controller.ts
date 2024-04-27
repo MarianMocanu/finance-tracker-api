@@ -26,4 +26,11 @@ export class AuthController {
   validateToken(@Req() request: RequestWithUser) {
     return { user: request.user, token: this.authService.refreshToken(request.user) };
   }
+
+  @UseGuards(AuthGuard)
+  @Get('upgrade')
+  @HttpCode(200)
+  upgradeToPremium(@Req() request: RequestWithUser) {
+    return this.authService.upgradeToPremium(request.user);
+  }
 }

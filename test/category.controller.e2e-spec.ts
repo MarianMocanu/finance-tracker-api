@@ -4,10 +4,20 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { CreateCategoryDto } from 'src/category/dto/create-category.dto';
 import { CategoryService } from 'src/category/category.service';
+import { AuthService } from 'src/auth/auth.service';
+import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/entities/user.entity';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { LoginDto } from 'src/auth/dto/login.dto';
 
 describe('Category Controller (e2e)', () => {
   let app: INestApplication;
   let categoryService: CategoryService;
+  let userService: UserService;
+  let authService: AuthService;
+  let token: string;
+  let user: User;
+
   const categoryDTO = new CreateCategoryDto('Subscriptions');
 
   beforeAll(async () => {
@@ -16,6 +26,15 @@ describe('Category Controller (e2e)', () => {
     }).compile();
 
     categoryService = moduleFixture.get<CategoryService>(CategoryService);
+    userService = moduleFixture.get<UserService>(UserService);
+    authService = moduleFixture.get<AuthService>(AuthService);
+
+    const userDTO = new CreateUserDto('marian', 'mail@marian.com', 'qwerty');
+    user = await userService.create(userDTO);
+
+    const loginDTO = new LoginDto('mail@marian.com', 'qwerty');
+    const loginResponse = await authService.login(loginDTO);
+    token = loginResponse.token;
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
@@ -24,7 +43,9 @@ describe('Category Controller (e2e)', () => {
 
   describe('/category (GET)', () => {
     it('should return 200 and an array of categories', async () => {
-      const response = await request(app.getHttpServer()).get('/category');
+      const response = await request(app.getHttpServer())
+        .get('/category')
+        .set('Authorization', token);
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeDefined();
       expect(Array.isArray(response.body)).toBe(true);
@@ -35,13 +56,19 @@ describe('Category Controller (e2e)', () => {
     it('should return 400 status code if invalid data', async () => {
       const invalidCategory = { ...categoryDTO, name: 1234 };
 
-      const response = await request(app.getHttpServer()).post('/category').send(invalidCategory);
+      const response = await request(app.getHttpServer())
+        .post('/category')
+        .set('Authorization', token)
+        .send(invalidCategory);
 
       expect(response.statusCode).toBe(400);
     });
 
     it('should return 201 and the new category after creation', async () => {
-      const response = await request(app.getHttpServer()).post('/category').send(categoryDTO);
+      const response = await request(app.getHttpServer())
+        .post('/category')
+        .set('Authorization', token)
+        .send(categoryDTO);
 
       expect(response.statusCode).toBe(201);
       expect(response.body).toBeDefined();
@@ -54,14 +81,18 @@ describe('Category Controller (e2e)', () => {
 
   describe('/category/:id (GET)', () => {
     it('should return 400 status code if category id is not a number', async () => {
-      const response = await request(app.getHttpServer()).get('/category/a123');
+      const response = await request(app.getHttpServer())
+        .get('/category/a123')
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBe('Category id is not a number');
     });
 
     it('should return 404 status code if category id not found', async () => {
-      const response = await request(app.getHttpServer()).get('/category/999999999');
+      const response = await request(app.getHttpServer())
+        .get('/category/999999999')
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(404);
     });
@@ -69,7 +100,9 @@ describe('Category Controller (e2e)', () => {
     it('should return 200 and the queried element', async () => {
       const newCateogry = await categoryService.create(categoryDTO);
 
-      const response = await request(app.getHttpServer()).get(`/category/${newCateogry.id}`);
+      const response = await request(app.getHttpServer())
+        .get(`/category/${newCateogry.id}`)
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(200);
       expect(response.body).toBeDefined();
@@ -82,14 +115,18 @@ describe('Category Controller (e2e)', () => {
 
   describe('/category/:id (PATCH)', () => {
     it('should return 400 status code if category id is not a number', async () => {
-      const response = await request(app.getHttpServer()).patch('/category/a9999999999');
+      const response = await request(app.getHttpServer())
+        .patch('/category/a9999999999')
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBe('Category id is not a number');
     });
 
     it('should return 404 if category not found', async () => {
-      const response = await request(app.getHttpServer()).patch('/category/999999');
+      const response = await request(app.getHttpServer())
+        .patch('/category/999999')
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(404);
       expect(response.body.message).toBe('Category not found');
@@ -101,6 +138,7 @@ describe('Category Controller (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .patch(`/category/${invalidcategory.id}`)
+        .set('Authorization', token)
         .send(invalidcategory);
       expect(response.statusCode).toBe(400);
 
@@ -113,6 +151,7 @@ describe('Category Controller (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .patch(`/category/${updatedcategory.id}`)
+        .set('Authorization', token)
         .send(updatedcategory);
 
       expect(response.statusCode).toBe(200);
@@ -125,14 +164,18 @@ describe('Category Controller (e2e)', () => {
 
   describe('/category/:id (DELETE)', () => {
     it('should return 400 status code if category id is not a number', async () => {
-      const response = await request(app.getHttpServer()).delete('/category/a123');
+      const response = await request(app.getHttpServer())
+        .delete('/category/a123')
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBe('Category id is not a number');
     });
 
     it('should return 404 if category not found', async () => {
-      const response = await request(app.getHttpServer()).delete('/category/999999');
+      const response = await request(app.getHttpServer())
+        .delete('/category/999999')
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(404);
       expect(response.body.message).toBe('Category not found');
@@ -141,7 +184,9 @@ describe('Category Controller (e2e)', () => {
     it('should return 204', async () => {
       const newCateogry = await categoryService.create(categoryDTO);
 
-      const response = await request(app.getHttpServer()).delete(`/category/${newCateogry.id}`);
+      const response = await request(app.getHttpServer())
+        .delete(`/category/${newCateogry.id}`)
+        .set('Authorization', token);
 
       expect(response.statusCode).toBe(204);
       expect(response.body).toEqual({});
@@ -149,6 +194,7 @@ describe('Category Controller (e2e)', () => {
   });
 
   afterAll(async () => {
+    await userService.remove(user.id);
     await app.close();
   });
 });

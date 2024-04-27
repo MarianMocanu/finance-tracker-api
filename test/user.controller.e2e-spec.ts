@@ -4,10 +4,18 @@ import * as request from 'supertest';
 import { AppModule } from 'src/app.module';
 import { UserService } from 'src/user/user.service';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { User } from 'src/user/entities/user.entity';
+import { AuthService } from 'src/auth/auth.service';
+import { LoginDto } from 'src/auth/dto/login.dto';
 
 describe('User Controller (e2e)', () => {
   let app: INestApplication;
   let userService: UserService;
+  let authService: AuthService;
+  let user: User;
+  let token: string;
+  let adminToken: string;
+  let adminUser: User;
   const userDTO = new CreateUserDto('John', 'mail@john.com', 'qwerty');
 
   beforeAll(async () => {
@@ -16,6 +24,19 @@ describe('User Controller (e2e)', () => {
     }).compile();
 
     userService = moduleFixture.get<UserService>(UserService);
+    authService = moduleFixture.get<AuthService>(AuthService);
+
+    const userDTO = new CreateUserDto('marian', 'mail@marian.com', 'qwerty');
+    user = await userService.create(userDTO);
+
+    const loginDTO = new LoginDto('mail@marian.com', 'qwerty');
+    const loginResponse = await authService.login(loginDTO);
+    token = loginResponse.token;
+
+    const adminLoginDto = new LoginDto('admin@admin.com', 'admin');
+    const adminLoginResponse = await authService.login(adminLoginDto);
+    adminToken = adminLoginResponse.token;
+    adminUser = adminLoginResponse.user;
 
     app = moduleFixture.createNestApplication();
     app.useGlobalPipes(new ValidationPipe());
@@ -72,13 +93,17 @@ describe('User Controller (e2e)', () => {
 
   describe('/user/:id (PATCH)', () => {
     it('should return 400 status code if user id is not a number', async () => {
-      const response = await request(app.getHttpServer()).patch('/user/a9999999999');
+      const response = await request(app.getHttpServer())
+        .patch('/user/a9999999999')
+        .set('Authorization', token);
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBe('User id is not a number');
     });
 
     it('should return 404 if user not found', async () => {
-      const response = await request(app.getHttpServer()).patch('/user/999999');
+      const response = await request(app.getHttpServer())
+        .patch('/user/999999')
+        .set('Authorization', token);
       expect(response.statusCode).toBe(404);
       expect(response.body.message).toBe('User not found');
     });
@@ -89,6 +114,7 @@ describe('User Controller (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .patch(`/user/${invalidUser.id}`)
+        .set('Authorization', token)
         .send(invalidUser);
 
       expect(response.statusCode).toBe(400);
@@ -102,6 +128,7 @@ describe('User Controller (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .patch(`/user/${updatedUser.id}`)
+        .set('Authorization', token)
         .send(updatedUser);
 
       expect(response.statusCode).toBe(200);
@@ -113,14 +140,26 @@ describe('User Controller (e2e)', () => {
   });
 
   describe('/user/:id (DELETE)', () => {
+    it('should return 403 status code if user is not an admin', async () => {
+      const response = await request(app.getHttpServer())
+        .delete('/user/a123')
+        .set('Authorization', token);
+      expect(response.statusCode).toBe(403);
+      expect(response.body.message).toBe('You must be an ADMIN to perform this action');
+    });
+
     it('should return 400 status code if user id is not a number', async () => {
-      const response = await request(app.getHttpServer()).delete('/user/a123');
+      const response = await request(app.getHttpServer())
+        .delete('/user/a123')
+        .set('Authorization', adminToken);
       expect(response.statusCode).toBe(400);
       expect(response.body.message).toBe('User id is not a number');
     });
 
     it('should return 404 if user not found', async () => {
-      const response = await request(app.getHttpServer()).delete('/user/999999');
+      const response = await request(app.getHttpServer())
+        .delete('/user/999999')
+        .set('Authorization', adminToken);
       expect(response.statusCode).toBe(404);
       expect(response.body.message).toBe('User not found');
     });
@@ -128,7 +167,9 @@ describe('User Controller (e2e)', () => {
     it('should return 204', async () => {
       const newUser = await userService.create(userDTO);
 
-      const response = await request(app.getHttpServer()).delete(`/user/${newUser.id}`);
+      const response = await request(app.getHttpServer())
+        .delete(`/user/${newUser.id}`)
+        .set('Authorization', adminToken);
 
       expect(response.statusCode).toBe(204);
       expect(response.body).toEqual({});
@@ -136,6 +177,7 @@ describe('User Controller (e2e)', () => {
   });
 
   afterAll(async () => {
+    await userService.remove(user.id);
     await app.close();
   });
 });

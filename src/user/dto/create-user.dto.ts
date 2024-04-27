@@ -1,4 +1,5 @@
 import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Role } from '../entities/user.entity';
 
 export class CreateUserDto {
   constructor(name: string, email: string, password: string) {

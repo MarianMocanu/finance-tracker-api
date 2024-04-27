@@ -69,7 +69,7 @@ To set up this project locally, please follow these steps:
 
    This command will start a Docker container with PostgreSQL using the settings defined in your `docker-compose.yml` file.
 
-## Running Migrations
+## Running Migrations & Seeds
 
 To run migrations and set up your database schema, follow these steps:
 
@@ -86,6 +86,14 @@ To run migrations and set up your database schema, follow these steps:
    ```
 
    This command will execute all pending migrations and apply changes to your database schema.
+
+3. **Run the seeds:**
+
+   ```bash
+   npm run db:seed
+   ```
+
+   This command will insert the initial data needed for testing purposes as well as an admin user.
 
 ## Database Scripts
 
