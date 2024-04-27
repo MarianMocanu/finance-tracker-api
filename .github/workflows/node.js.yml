@@ -47,6 +47,13 @@ jobs:
           POSTGRES_PASSWORD: testpassword
           POSTGRES_DB: testdb
 
+      - name: Run seeds to add Admin user
+        run: npm run db:seed
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+
       - name: Run e2e tests
         run: npm run test:e2e
         env:
