@@ -14,6 +14,10 @@ export class UserService {
     return this.userRepository.save(newUser);
   }
 
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find();
+  }
+
   async findOne(id: number): Promise<User> {
     const foundUser = await this.userRepository.findOneBy({ id });
     if (!foundUser) {

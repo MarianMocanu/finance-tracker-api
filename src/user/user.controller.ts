@@ -25,6 +25,12 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
+  @UseGuards(AuthGuard, AdminGuard)
+  @Get()
+  findAll() {
+    return this.userService.findAll();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     this.validateUserId(id);
